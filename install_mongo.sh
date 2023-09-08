@@ -26,9 +26,9 @@ systemctl status mongod
 # Allow remote connections to mongo (Set to listen on all interfaces)
 export bind_address=0.0.0.0
 sed -i -r 's/(\b[0-9]{1,3}\.){3}[0-9]{1,3}\b'/"${bind_address}"/ /etc/mongod.conf
-# same file add
-#security:
-#  authorization: "enabled"
+# Update the security authorization within the mongod configuration
+sed -i -r '/security:/a \  authorization: "enabled"' /etc/mongod.conf
+sed -i -r 's/#security:/security:/' /etc/mongod.conf
 
 # Restart mongo
 systemctl restart mongod
