@@ -53,7 +53,7 @@ Get all pods:
 ```
 kubectl get pods -A
 ```
-Get all services
+Get all services:
 ```
 kubectl get services -A
 ```
