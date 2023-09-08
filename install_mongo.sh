@@ -1,6 +1,6 @@
 #!/bin/bash
-
 # For ubuntu 22.04
+# Run this script with sudo privileges
 
 # Disable the ipv6 stack
 sysctl -w net.ipv6.conf.all.disable_ipv6=1
@@ -24,8 +24,8 @@ systemctl enable --now mongod
 systemctl status mongod
 
 # Allow remote connections to mongo (Set to listen on all interfaces)
-export BINDADDRESS=0.0.0.0
-sed -i -r 's/(\b[0-9]{1,3}\.){3}[0-9]{1,3}\b'/"$BINDADDRESS"/ /etc/mongod.conf
+export bind_address=0.0.0.0
+sed -i -r 's/(\b[0-9]{1,3}\.){3}[0-9]{1,3}\b'/"${bind_address}"/ /etc/mongod.conf
 # same file add
 #security:
 #  authorization: "enabled"
