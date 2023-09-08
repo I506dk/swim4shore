@@ -59,7 +59,7 @@ kubectl get services -A
 ```
 Port forward a service (kotsadm in this example):
 ```
-kubectl port-forward service/kotsadm 8800:3000 --address='0.0.0.0' --namespace <namespace_if_needed> 
+kubectl port-forward service/kotsadm 8800:3000 --address='0.0.0.0' -n <namespace_if_needed> 
 ```
 Edit the current ingress configuration:
 ```
