@@ -70,7 +70,7 @@ mv kubectl-kots /usr/local/bin/
 rm kots_linux.tar.gz
 
 # Install the add-on
-microk8s kubectl kots install swimlane-platform --namespace ${k8namespace}
+microk8s kubectl kots install swimlane-platform --namespace ${k8namespace} --wait-duration 10m
 
 # Setup ingress
 #microk8s kubectl apply -f test-ingress.yaml
