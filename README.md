@@ -11,5 +11,9 @@ curl -O https://raw.githubusercontent.com/I506dk/swim4shore/main/install_swimlan
 
 Next, make the swimlane script executable using chmod:
 ```
-chmod +x install_swimlane.sh
+sudo chmod +x install_swimlane.sh
+```
+Finally, run the swimlane script with sudo privileges
+```
+sudo ./install_swimlane.sh
 ```
