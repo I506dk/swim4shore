@@ -30,10 +30,7 @@ unset ${swimlane_password}
 usermod -a -G microk8s ${swimlane_username}
 
 # Alternatively, add yourself to the group
-usermod -a -G microk8s ${USER}
-
-# Activate group membership
-newgrp microk8s
+#usermod -a -G microk8s ${USER}
 
 # Enabled microk8s services
 microk8s enable dns hostpath-storage ingress rbac
