@@ -36,20 +36,35 @@ systemctl stop mongod
 systemctl daemon-reload
 systemctl start mongod
 
-# Create a new root user (username is the same as the currently logged in user)
-mongosh --eval "use admin;db.createUser({user:'${USER}', pwd:'Linux_User', roles:[{role:'root', db:'admin'}]})"
+# Ask the user to set a password for the new user to be created in mongo
+# (This user will have the same username as the current user)
+read -p "Please enter a password for the mongo user ${USER}:" current_user_password
 
-# Create swimlane database
-#sudo mongosh --eval "use Swimlane"
+# Create a new root user (username is the same as the currently logged in user)
+mongosh --eval "use admin;db.createUser({user:'${USER}', pwd:'${current_user_password}', roles:[{role:'root', db:'admin'}]})"
+
+# Unset the password variable
+unset ${current_user_password}
+
+# Ask the user to set a password for the new user to be created in mongo
+# (This user will be 'swimlane-user')
+read -p "Please enter a password for the mongo user 'swimlane-user':" swimlane_user_password
 
 # Create a new swimlane-user that is an administrator of the swimlane database
-mongosh --eval "use Swimlane;db.createUser({user:'swimlane-user', pwd:'Linux_User', roles:[{role:'dbAdmin', db:'Swimlane'}]})"
+mongosh --eval "use Swimlane;db.createUser({user:'swimlane-user', pwd:'${swimlane_user_password}', roles:[{role:'dbAdmin', db:'Swimlane'}]})"
 
-# Create the swimlanehistory database
-#sudo mongosh --eval "use SwimlaneHistory"
+# Unset the password variable
+unset ${swimlane_user_password}
+
+# Ask the user to set a password for the new user to be created in mongo
+# (This user will be 'swimlane-user')
+read -p "Please enter a password for the mongo user 'swimlane-history-user':" swimlane_history_user_password
 
 # Create a new swimlane-history-user that is an administrator of the swimlanehistory database
-mongosh --eval "use SwimlaneHistory;db.createUser({user:'swimlane-history-user', pwd:'Linux_User', roles:[{role:'dbAdmin', db:'SwimlaneHistory'}]})"
+mongosh --eval "use SwimlaneHistory;db.createUser({user:'swimlane-history-user', pwd:'${swimlane_history_user_password}', roles:[{role:'dbAdmin', db:'SwimlaneHistory'}]})"
+
+# Unset the password variable
+unset ${swimlane_history_user_password}
 
 # Restart mongo
 systemctl restart mongod

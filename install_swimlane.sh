@@ -30,13 +30,13 @@ unset ${swimlane_password}
 usermod -a -G microk8s ${swimlane_username}
 
 # Alternatively, add yourself to the group
-#usermod -a -G microk8s ${USER}
+usermod -a -G microk8s ${USER}
 
 # Enabled microk8s services
 microk8s enable dns hostpath-storage ingress rbac
 
 # Create alias
-#alias kubectl="microk8s kubectl"
+alias kubectl='microk8s kubectl'
 
 # Edit sysctl.conf file
 echo "vm.max_map_count=262144" | sudo tee -a /etc/sysctl.conf
@@ -72,8 +72,33 @@ rm kots_linux.tar.gz
 # Install the add-on
 microk8s kubectl kots install swimlane-platform --namespace ${k8namespace} --wait-duration 10m
 
+# Create ingress file
+# This forwards everything to the swimlane web on port 443 (sw-web service)
+sudo tee swimlane_ingress.yaml <<EOF
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: swimlane-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: https
+    nginx.ingress.kubernetes.io/proxy-ssl-verify: "false"
+    nginx.org/client-max-body-size: "1024m"
+    nginx.ingress.kubernetes.io/proxy-body-size: "1024m"
+spec:
+  rules:
+  - http:
+      paths:
+      - backend:
+          service:
+            name: sw-web
+            port:
+              number: 443
+        path: /
+        pathType: Prefix
+EOF
+
 # Setup ingress
-#microk8s kubectl apply -f test-ingress.yaml
+microk8s kubectl apply -f swimlane_ingress.yaml -n ${k8namespace}
 
 # Port forward from the host to the pod
 #microk8s kubectl port-forward service/kotsadm 8800:3000 --namespace ${k8namespace} --address='0.0.0.0'
