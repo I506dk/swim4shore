@@ -101,5 +101,28 @@ EOF
 # Setup ingress
 microk8s kubectl apply -f swimlane_ingress.yaml -n ${k8namespace}
 
+# Get the dns server of the host
+export dnsservers=$(resolvectl status | grep -o -E "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)")
+
+# Create the swimlane dns configuration
+sudo tee dns_config.yaml <<EOF
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: ${k8namespace}
+  name: swimlane-dns-config
+spec:
+  containers:
+    - name: dns
+      image: nginx
+  dnsPolicy: "None"
+  dnsConfig:
+    nameservers:
+      - ${dnsservers}
+EOF
+
+#  Setup dns
+microk8s kubectl apply -f dns_config.yaml -n ${k8namespace}
+
 # Port forward from the host to the pod
 #microk8s kubectl port-forward service/kotsadm 8800:3000 -n ${k8namespace} --address='0.0.0.0'

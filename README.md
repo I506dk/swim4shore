@@ -69,6 +69,10 @@ Apply a local configuration file (ingress configuration file in this example):
 ```
 kubectl apply -f <my_ingress_file>.yaml -n <namespace_if_needed>
 ```
+Install dnsutils for troubleshooting DNS related issues:
+```
+kubectl apply -f https://k8s.io/examples/admin/dns/dnsutils.yaml
+```
 Perform an nslookup on a host from within the cluster (requires 'microk8s enable dns'):
 ```
 kubectl exec -i -t dnsutils -- nslookup <hostname_or_ip_to_lookup>
