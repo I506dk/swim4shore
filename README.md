@@ -73,3 +73,7 @@ Perform an nslookup on a host from within the cluster (requires 'microk8s enable
 ```
 kubectl exec -i -t dnsutils -- nslookup <hostname_or_ip_to_lookup>
 ```
+
+## Troubleshooting
+If MongoDB commands result in an "Illegal Instruction (core dumped)" error, change the cpu type to "host" instead of "kvm64" or anything else virtualized if using a hypervisor.
+Otherwise, make sure the cpu supports the avx instruction set.

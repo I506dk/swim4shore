@@ -15,7 +15,7 @@ export swimlane_username=swimlane-user
 useradd ${swimlane_username}
 
 # Ask the user to set a password for the new swimlane user
-read -p "Please enter a password for the newly created swimlane user:" swimlane_password
+read -p "Please enter a password for the newly created user 'swimlane-user':" swimlane_password
 
 # Set password for the new swimlane user
 passwd ${swimlane_username} << EOD
@@ -50,8 +50,8 @@ microk8s kubectl get nodes
 # Get current namespaces
 microk8s kubectl get namespaces
 
-# Create a new namespace called production
-export k8namespace=production
+# Create a new namespace called swimlane
+export k8namespace=swimlane
 microk8s kubectl create namespace ${k8namespace}
 
 # Download the swimlane SPI kubectl add-on
@@ -84,21 +84,22 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-ssl-verify: "false"
     nginx.org/client-max-body-size: "1024m"
     nginx.ingress.kubernetes.io/proxy-body-size: "1024m"
+  namespace: ${k8namespace}
 spec:
   rules:
   - http:
       paths:
-      - backend:
+      - path: "/"
+        pathType: Exact
+        backend:
           service:
             name: sw-web
             port:
               number: 443
-        path: /
-        pathType: Prefix
 EOF
 
 # Setup ingress
 microk8s kubectl apply -f swimlane_ingress.yaml -n ${k8namespace}
 
 # Port forward from the host to the pod
-#microk8s kubectl port-forward service/kotsadm 8800:3000 --namespace ${k8namespace} --address='0.0.0.0'
+#microk8s kubectl port-forward service/kotsadm 8800:3000 -n ${k8namespace} --address='0.0.0.0'
