@@ -109,8 +109,8 @@ sudo tee dns_config.yaml <<EOF
 apiVersion: v1
 kind: Pod
 metadata:
-  namespace: ${k8namespace}
   name: swimlane-dns-config
+  namespace: ${k8namespace}
 spec:
   containers:
     - name: dns
@@ -121,8 +121,32 @@ spec:
       - ${dnsservers}
 EOF
 
-#  Setup dns
+# Setup dns
 microk8s kubectl apply -f dns_config.yaml -n ${k8namespace}
 
-# Port forward from the host to the pod
-#microk8s kubectl port-forward service/kotsadm 8800:3000 -n ${k8namespace} --address='0.0.0.0'
+# Setup the kotsadm service
+sudo tee kots_config.yaml <<EOF
+apiVersion: v1
+kind: Service
+metadata:
+  name: kotsadm
+  namespace: ${k8namespace}
+spec:
+  type: NodePort
+  ports:
+  - port: 3000
+    nodePort: 31000
+  selector:
+    app: kotsadm
+EOF
+
+# Setup dns
+microk8s kubectl apply -f kots_config.yaml -n ${k8namespace}
+
+# Get the hostname and ipv4 address of the current machine
+export ipv4_address=$(hostname -I | awk '{print $1}')
+export hostname=$(hostname)
+
+# Print messages for swimlane information
+echo "The Swimlane administrator panel can be accessed using 'http://${hostname}:31000' or 'http://${ipv4_address}:31000'."
+echo "Once Swimlane has been configured from the administrator panel, the Swimlane instance can be accessed using 'https://${hostname}' or 'https://${ipv4_address}'."
