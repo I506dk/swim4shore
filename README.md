@@ -40,6 +40,11 @@ sudo ./install_swimlane.sh
 ```
 
 ## Swimlane Configuration
+The Swimlane administrator panel will allow for the backend configuration of Swimlane, and will be availiable on port 31000.
+For example:
+```
+http://<swimlane_hostname_or_ip>:31000
+```
 
 
 ## Useful Commands
