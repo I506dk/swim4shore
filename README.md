@@ -5,10 +5,15 @@
 A collection of utilities and tools for installing and configuring swimlane.
 
 ## Features
+- Automated configuration of MongoDB
+- Create the necessay users and databases for Swimlane functionality
+- Automated installation of Swimlane
+- Automated configuration of services and DNS
 
 ## Installation
 
-The Mongo install script installs MongoDB as a standalone instance. Three users are created, one of which is named after the currently logged in user. The other two are named 'swimlane-user' and 'swimlane-history-user' and are used by swimlane. These two accounts are used in the 'Swimlane' and 'SwimlaneHistory' databases respectively.
+The Mongo install script installs MongoDB as a standalone instance. Three users are created, one of which is named after the currently logged in user.
+The other two are named 'swimlane-user' and 'swimlane-history-user' and are used by swimlane. These two accounts are used in the 'Swimlane' and 'SwimlaneHistory' databases respectively.
 
 First, install MongoDB on a standalone machine or virtual machine.
 ```
@@ -41,14 +46,35 @@ sudo ./install_swimlane.sh
 
 ## Swimlane Configuration
 The Swimlane administrator panel will allow for the backend configuration of Swimlane, and will be availiable on port 31000.
+
 For example:
 ```
 http://<swimlane_hostname_or_ip>:31000
 ```
+This will present the login page. The password will be the same as the password set during the latter portion of the install script.
 
+![kotsadm_login](https://github.com/I506dk/swim4shore/assets/33561466/15aaffdd-dfb4-49d5-a93e-6b157fb16d20)
+
+Backend configurations for Swimlane can then be modified as needed.
+
+![swimlane_ingress](https://github.com/I506dk/swim4shore/assets/33561466/86d5c24e-8b4d-4964-b33e-18d3d82230af)
+
+In this specific case, the Mongo database was deployed outside of the Kubernetes cluster.
+
+![mongo_external](https://github.com/I506dk/swim4shore/assets/33561466/aa0e8d23-2266-43c6-ad6f-db948d63653b)
+
+There are two configurations that apply to the Mongo databases created using the "install_mongo" script.
+The first is for the "Swimlane" database, and the second is for the "SwimlaneHistory" database.
+The usernames will be "swimlane-user" and "swimlane-history-user", respectively. Enter the passwords that were set during the creation of these users.
+
+If DNS is properly configured, the hostname of the Mongo database(s) can be used. Otherwise, use the IP address.
+The port will be "27017" by default unless otherwise changed.
+
+![swimlane_db](https://github.com/I506dk/swim4shore/assets/33561466/c0440c46-b694-4055-aa99-a1ec1cadb218)
+![swimlane_history_db](https://github.com/I506dk/swim4shore/assets/33561466/2ca783f8-5bb0-4d70-ad25-d978773e2771)
 
 ## Useful Commands
-Below is a collection of useful commands for interacting with Kubernetes and Microk8s.
+#### Below is a collection of useful commands for interacting with Kubernetes and Microk8s.
 
 Get all nodes:
 ```
